@@ -1,4 +1,4 @@
--- تعريف متغير لحالة السكربت
+-- متغير لتتبع حالة السكربت
 local scriptActive = false
 
 -- دالة لتحديد لون اللاعب بناءً على العناصر التي يحملها
@@ -12,8 +12,8 @@ local function getRoleColor(plr)
     end
 end
 
--- دالة لتشغيل السكربت
-local function runScript()
+-- دالة لتشغيل الـ wall hack
+local function enableWallHack()
     while scriptActive do
         for _, v in pairs(game.Players:GetChildren()) do
             if v ~= game.Players.LocalPlayer and v.Character and not v.Character:FindFirstChild("Highlight") then
@@ -29,29 +29,21 @@ local function runScript()
     end
 end
 
--- إنشاء واجهة المستخدم
-local ScreenGui = Instance.new("ScreenGui")
-local ToggleButton = Instance.new("TextButton")
-
-ScreenGui.Parent = game.CoreGui
-ScreenGui.Name = "ToggleScriptGui"
-
-ToggleButton.Parent = ScreenGui
-ToggleButton.Size = UDim2.new(0, 200, 0, 50)
-ToggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
-ToggleButton.Text = "تشغيل السكربت"
-ToggleButton.BackgroundColor3 = Color3.new(1, 1, 1)
-
--- دالة لتبديل حالة السكربت وتحديث نص الزر
-local function toggleScript()
-    scriptActive = not scriptActive
-    if scriptActive then
-        ToggleButton.Text = "إيقاف السكربت"
-        runScript()
-    else
-        ToggleButton.Text = "تشغيل السكربت"
+-- دالة لإيقاف الـ wall hack
+local function disableWallHack()
+    for _, v in pairs(game.Players:GetChildren()) do
+        if v.Character and v.Character:FindFirstChild("Highlight") then
+            v.Character.Highlight:Destroy()
+        end
     end
 end
 
--- ربط حدث النقر على الزر بتبديل حالة السكربت
-ToggleButton.MouseButton1Click:Connect(toggleScript)
+-- دالة لتبديل حالة السكربت
+local function toggleScript()
+    scriptActive = not scriptActive
+    if scriptActive then
+        enableWallHack()
+    else
+        disableWallHack()
+    end
+end
